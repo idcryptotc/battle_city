@@ -5,14 +5,14 @@
 int g_windowSizeX = 640;
 int g_windowSizeY = 480;
 
-void glfwWindowSizeCallback(GLFWwindow* pWindow, int width, int height)
+static void glfwWindowSizeCallback(GLFWwindow* pWindow, int width, int height)
 {
     g_windowSizeX = width;
     g_windowSizeY = height;
     glViewport(0, 0, g_windowSizeX, g_windowSizeY);
 }
 
-void glfwKeyCallback(GLFWwindow* pWindow, int key, int scancode, int action, int mode)
+static void glfwKeyCallback(GLFWwindow* pWindow, int key, int scancode, int action, int mode)
 {
     if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
     {
