@@ -8,7 +8,7 @@ namespace Renderer
         texture2D.m_ID = 0;
         m_mode = texture2D.m_mode;
         m_width = texture2D.m_width;
-        m_heigth = texture2D.m_heigth;
+        m_height = texture2D.m_height;
     }
 
     Texture2D::Texture2D(const GLuint width, const GLuint height
@@ -17,7 +17,7 @@ namespace Renderer
         , const GLenum filter
         , const GLenum wrapMode)
         : m_width(width)
-        , m_heigth(height)
+        , m_height(height)
     {
         switch (channels)
         {
@@ -35,7 +35,7 @@ namespace Renderer
         glGenTextures(1, &m_ID);
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, m_ID);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, m_width, m_heigth, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, m_width, m_height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
 
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrapMode);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrapMode);
@@ -58,12 +58,30 @@ namespace Renderer
         texture2D.m_ID = 0;
         m_mode = texture2D.m_mode;
         m_width = texture2D.m_width;
-        m_heigth = texture2D.m_heigth;
+        m_height = texture2D.m_height;
         return *this;
     }
 
     void Texture2D::bind() const
     {
         glBindTexture(GL_TEXTURE_2D, m_ID);
+    }
+
+    void Texture2D::addSubTexture(std::string name, const glm::vec2& leftBottomUV, const glm::vec2& rightTopUV)
+    {
+        m_subTextures.emplace(std::move(name), SubTexture2D(leftBottomUV, rightTopUV));
+    }
+
+    const Texture2D::SubTexture2D& Texture2D::getSubtexture(const std::string& name) const
+    {
+        auto it = m_subTextures.find(name);
+
+        if (it != m_subTextures.end())
+        {
+            return it->second;
+        }
+
+        const static SubTexture2D defaultSubTexture;
+        return defaultSubTexture;
     }
 }

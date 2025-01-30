@@ -4,6 +4,7 @@
 #include <vec2.hpp>
 
 #include <memory>
+#include <string>
 
 namespace Renderer
 {
@@ -14,10 +15,12 @@ namespace Renderer
     {
     public:
         Sprite(const Sprite&) = delete;
-        Sprite(std::shared_ptr<Texture2D> pTexture
+        Sprite(
+            std::shared_ptr<Texture2D> pTexture
+            , std::string initialSubTexture
             , std::shared_ptr<ShaderProgram> pShaderProgram
-            , glm::vec2& position = glm::vec2(0.f)
-            , glm::vec2& size = glm::vec2(1.f)
+            , const glm::vec2& position = glm::vec2(0.f)
+            , const glm::vec2& size = glm::vec2(1.f)
             , const float rotation = 0.f);
 
         ~Sprite();
