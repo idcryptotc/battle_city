@@ -55,7 +55,7 @@ namespace Renderer
 
         glGenBuffers(1, &m_textureCoordsVbo);
         glBindBuffer(GL_ARRAY_BUFFER, m_textureCoordsVbo);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(textureCoords), textureCoords, GL_STATIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(textureCoords), &textureCoords, GL_STATIC_DRAW);
         glEnableVertexAttribArray(1);
         glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
 

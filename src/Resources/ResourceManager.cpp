@@ -2,6 +2,7 @@
 #include "../Renderer/ShaderProgram.h"
 #include "../Renderer/Texture2D.h"
 #include "../Renderer/Sprite.h"
+#include "../Renderer/AnimatedSprite.h"
 
 #include <sstream>
 #include <fstream>
@@ -154,6 +155,53 @@ std::shared_ptr<Renderer::Sprite> ResourceManager::getSprite(const std::string& 
     return nullptr;
 }
 
+std::shared_ptr<Renderer::AnimatedSprite> ResourceManager::loadAnimatedSprite(
+    const std::string& animatedSpriteName
+    , const std::string& textureName
+    , const std::string& shaderName
+    , const unsigned int animatedSpriteWidth
+    , const unsigned int animatedSpriteHeight
+    , const std::string& subTextureName)
+{
+    auto pTexture = getTexture(textureName);
+
+    if (!pTexture)
+    {
+        std::cerr << "Can't find the texture: " << textureName << " for the animated sprite: " << animatedSpriteName << std::endl;
+    }
+
+    auto pShader = getShaderProgram(shaderName);
+
+    if (!pShader)
+    {
+        std::cerr << "Can't find the shader: " << shaderName << " for the animated sprite: " << animatedSpriteName << std::endl;
+    }
+
+    std::shared_ptr<Renderer::AnimatedSprite> newAnimatedSprite = m_animatedSprites
+        .emplace(animatedSpriteName, std::make_shared<Renderer::AnimatedSprite>(
+            pTexture
+            , subTextureName
+            , pShader
+            , glm::vec2(0.f, 0.f)
+            , glm::vec2(animatedSpriteWidth, animatedSpriteHeight)))
+        .first->second;
+
+    return newAnimatedSprite;
+}
+
+std::shared_ptr<Renderer::AnimatedSprite> ResourceManager::getAnimatedSprite(const std::string& animatedSpriteName)
+{
+    AnimatedSpritesMap::const_iterator it = m_animatedSprites.find(animatedSpriteName);
+
+    if (it != m_animatedSprites.end())
+    {
+        return it->second;
+    }
+
+    std::cerr << "Can't find the animated sprite: " << animatedSpriteName << std::endl;
+    return nullptr;
+}
+
 std::shared_ptr<Renderer::Texture2D> ResourceManager::loadTextureAtlas(
     const std::string textureName
     , const std::string texturePath
@@ -170,7 +218,7 @@ std::shared_ptr<Renderer::Texture2D> ResourceManager::loadTextureAtlas(
         unsigned int currentTextureOffsetX = 0;
         unsigned int currentTextureOffsetY = textureHeight;
 
-        for (const auto& currentSubTextureName : subTextures)
+        for (auto& currentSubTextureName : subTextures)
         {
             glm::vec2 leftBottomUV(
                 static_cast<float>(currentTextureOffsetX) / textureWidth
@@ -179,7 +227,7 @@ std::shared_ptr<Renderer::Texture2D> ResourceManager::loadTextureAtlas(
                 static_cast<float>(currentTextureOffsetX + subTextureWidth) / textureWidth
                 , static_cast<float>(currentTextureOffsetY) / textureHeight);
 
-            pTexture->addSubTexture(currentSubTextureName, leftBottomUV, rightTopUV);
+            pTexture->addSubTexture(std::move(currentSubTextureName), leftBottomUV, rightTopUV);
             currentTextureOffsetX += subTextureWidth;
 
             if (currentTextureOffsetX >= textureWidth)
