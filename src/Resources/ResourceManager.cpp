@@ -12,10 +12,25 @@
 #define STBI_ONLY_PNG
 #include "stb_image.h"
 
-ResourceManager::ResourceManager(const std::string& executablePath)
+ResourceManager::ShaderProgramsMap ResourceManager::m_shaderPrograms;
+ResourceManager::TexturesMap ResourceManager::m_textures;
+ResourceManager::SpritesMap ResourceManager::m_sprites;
+ResourceManager::AnimatedSpritesMap ResourceManager::m_animatedSprites;
+std::string ResourceManager::m_path;
+
+
+void ResourceManager::setExecutiblePath(const std::string& executablePath)
 {
     size_t found = executablePath.find_last_of("/\\");
     m_path = executablePath.substr(0, found);
+}
+
+void ResourceManager::unloadAllResources()
+{
+    m_shaderPrograms.clear();
+    m_textures.clear();
+    m_sprites.clear();
+    m_animatedSprites.clear();
 }
 
 std::shared_ptr<Renderer::ShaderProgram> ResourceManager::loadShaders(const std::string& shaderName, const std::string& vertexPath, const std::string& fragmentPath)
@@ -37,7 +52,7 @@ std::shared_ptr<Renderer::ShaderProgram> ResourceManager::loadShaders(const std:
     }
 
 
-    std::shared_ptr<Renderer::ShaderProgram>& newShader = m_shaderProgramsMap
+    std::shared_ptr<Renderer::ShaderProgram>& newShader = m_shaderPrograms
         .emplace(shaderName, std::make_shared<Renderer::ShaderProgram>(vertexString, fragmentString))
         .first->second;
 
@@ -55,9 +70,9 @@ std::shared_ptr<Renderer::ShaderProgram> ResourceManager::loadShaders(const std:
 
 std::shared_ptr<Renderer::ShaderProgram> ResourceManager::getShaderProgram(const std::string& shaderName)
 {
-    ShaderProgramsMap::const_iterator it = m_shaderProgramsMap.find(shaderName);
+    ShaderProgramsMap::const_iterator it = m_shaderPrograms.find(shaderName);
 
-    if (it != m_shaderProgramsMap.end())
+    if (it != m_shaderPrograms.end())
     {
         return it->second;
     }
@@ -205,7 +220,7 @@ std::shared_ptr<Renderer::AnimatedSprite> ResourceManager::getAnimatedSprite(con
 std::shared_ptr<Renderer::Texture2D> ResourceManager::loadTextureAtlas(
     const std::string textureName
     , const std::string texturePath
-    , const std::vector<std::string> subTextures
+    , std::vector<std::string> subTextures
     , const unsigned int subTextureWidth
     , const unsigned int subTextureHeight)
 {
@@ -241,7 +256,7 @@ std::shared_ptr<Renderer::Texture2D> ResourceManager::loadTextureAtlas(
     return pTexture;
 }
 
-std::string ResourceManager::getFileString(const std::string& relativeFilePath) const
+std::string ResourceManager::getFileString(const std::string& relativeFilePath)
 {
     std::ifstream f;
     f.open(m_path + "/" + relativeFilePath, std::ios::in | std::ios::binary);

@@ -24,7 +24,7 @@ namespace Renderer
 		void update(uint64_t delta);
 
 	private:
-		std::map<std::string, std::vector<std::pair<std::string, uint64_t>>> m_statesMap;
+		std::map<std::string, std::vector<std::pair<std::string, uint64_t>>> m_states;
 		size_t m_currentFrame = 0;
 		uint64_t m_currentAnimationTime = 0;
 		std::map<std::string, std::vector<std::pair<std::string, uint64_t>>>::const_iterator m_pCurrentAnimaionDurations;

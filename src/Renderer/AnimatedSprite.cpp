@@ -14,12 +14,12 @@ namespace Renderer
         , const float rotation)
         : Sprite(std::move(pTexture), std::move(initialSubTexture), std::move(pShaderProgram), position, size, rotation)
     {
-        m_pCurrentAnimaionDurations = m_statesMap.end();
+        m_pCurrentAnimaionDurations = m_states.end();
     }
 
     void AnimatedSprite::insertState(std::string state, std::vector<std::pair<std::string, uint64_t>> subTexturesDuration)
     {
-        m_statesMap.emplace(std::move(state), std::move(subTexturesDuration));
+        m_states.emplace(std::move(state), std::move(subTexturesDuration));
     }
 
     void AnimatedSprite::render() const
@@ -50,9 +50,9 @@ namespace Renderer
 
     void AnimatedSprite::setState(const std::string& newState)
     {
-        auto it = m_statesMap.find(newState);
+        auto it = m_states.find(newState);
 
-        if (it == m_statesMap.end())
+        if (it == m_states.end())
         {
             std::cerr << "Can't find animation state: " << newState << std::endl;
             return;
@@ -69,7 +69,7 @@ namespace Renderer
 
     void AnimatedSprite::update(uint64_t delta)
     {
-        if (m_pCurrentAnimaionDurations != m_statesMap.end())
+        if (m_pCurrentAnimaionDurations != m_states.end())
         {
             m_currentAnimationTime += delta;
 
