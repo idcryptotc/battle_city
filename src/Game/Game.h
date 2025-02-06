@@ -2,31 +2,32 @@
 
 #include <vec2.hpp>
 #include <array>
+#include <memory>
 
-namespace Game
+class Tank;
+
+class Game
 {
-	class Game
-	{
-	public:
-		Game(const glm::ivec2& windowSize);
-		
-		~Game();
+public:
+    Game(const glm::ivec2& windowSize);
 
-		void render();
-		void update(uint64_t delta);
-		void setKey(int key, int action);
-		bool init() const;
+    ~Game();
 
-	private:
-		enum class EGamesState
-		{
-			Active,
-			Pause,
-		};
+    void render();
+    void update(uint64_t delta);
+    void setKey(int key, int action);
+    bool init();
 
-		static const int countKeys = 349;
-		std::array<bool, countKeys> m_keys;
-		EGamesState m_eCurrentGamesState;
-		glm::ivec2 m_windowSize;
-	};
-}
+private:
+    enum class EGamesState
+    {
+        Active,
+        Pause,
+    };
+
+    static const int countKeys = 349;
+    std::array<bool, countKeys> m_keys;
+    EGamesState m_eCurrentGamesState;
+    glm::ivec2 m_windowSize;
+    std::unique_ptr<Tank> m_pTank;
+};

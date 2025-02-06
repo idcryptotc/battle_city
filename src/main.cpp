@@ -9,7 +9,7 @@
 #include "Resources/ResourceManager.h"
 
 glm::ivec2 g_windowSize(640, 480);
-Game::Game g_game{ g_windowSize };
+Game g_game{ g_windowSize };
 
 static void glfwWindowSizeCallback(GLFWwindow* pWindow, int width, int height)
 {
