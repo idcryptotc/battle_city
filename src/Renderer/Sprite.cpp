@@ -47,21 +47,15 @@ namespace Renderer
         glGenVertexArrays(1, &m_vao);
         glBindVertexArray(m_vao);
 
-        glGenBuffers(1, &m_vertexCoordsVbo);
-        glBindBuffer(GL_ARRAY_BUFFER, m_vertexCoordsVbo);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(vertexCoords), vertexCoords, GL_STATIC_DRAW);
+        m_vertexCoordsBuffer.init(vertexCoords, 2ull * 4ull * sizeof(GLfloat));
         glEnableVertexAttribArray(0);
         glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
 
-        glGenBuffers(1, &m_textureCoordsVbo);
-        glBindBuffer(GL_ARRAY_BUFFER, m_textureCoordsVbo);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(textureCoords), &textureCoords, GL_STATIC_DRAW);
+        m_textureCoordsBuffer.init(textureCoords, 2ull * 4ull * sizeof(GLfloat));
         glEnableVertexAttribArray(1);
         glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
 
-        glGenBuffers(1, &m_Ebo);
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_Ebo);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), &indices, GL_STATIC_DRAW);
+        m_indexBuffer.init(indices, 6ull * sizeof(GLuint));
 
         glBindBuffer(GL_ARRAY_BUFFER, 0);
         glBindVertexArray(0);
@@ -70,9 +64,6 @@ namespace Renderer
 
     Sprite::~Sprite()
     {
-        glDeleteBuffers(1, &m_vertexCoordsVbo);
-        glDeleteBuffers(1, &m_textureCoordsVbo);
-        glDeleteBuffers(1, &m_Ebo);
         glDeleteVertexArrays(1, &m_vao);
     }
 
