@@ -3,7 +3,7 @@
 #include <iostream>
 #include <gtc/type_ptr.hpp>
 
-namespace Renderer
+namespace RenderEngine
 {
     ShaderProgram::ShaderProgram(ShaderProgram&& shaderProgram) noexcept
     {

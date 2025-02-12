@@ -4,7 +4,7 @@
 #include <string>
 #include <mat4x4.hpp>
 
-namespace Renderer
+namespace RenderEngine
 {
     class ShaderProgram
     {

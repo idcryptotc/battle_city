@@ -24,6 +24,8 @@ add_executable(
 	src/Renderer/VertexArray.h
 	src/Renderer/VertexBufferLayout.cpp
 	src/Renderer/VertexBufferLayout.h
+	src/Renderer/Renderer.cpp
+	src/Renderer/Renderer.h
 
 	src/Resources/ResourceManager.cpp
 	src/Resources/ResourceManager.h
